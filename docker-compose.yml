@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  auth-db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: auth_user
+      POSTGRES_PASSWORD: auth_pass
+      POSTGRES_DB: auth_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - auth_db_data:/var/lib/postgresql/data
+
+  auth-service:
+    build: ./auth-service
+    ports:
+      - "4000:4000"
+    env_file:
+      - ./auth-service/.env
+    depends_on:
+      - auth-db
+    volumes:
+      - ./auth-service/keys:/app/keys:ro
+
+  stego-service:
+    build: ./stego-service
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./stego-service/.env
+    depends_on:
+      - auth-service
+    volumes:
+      - ./stego-service/keys:/app/keys:ro
+      - ./stego-service/uploads:/app/uploads
+
+volumes:
+  auth_db_data:

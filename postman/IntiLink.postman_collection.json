@@ -1,0 +1,52 @@
+{
+  "info": {
+    "name": "IntiLink",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "AUTH - Login",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {"mode": "raw", "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"pass\"\n}"},
+        "url": {"raw": "http://localhost:4000/api/auth/login", "protocol": "http", "host": ["localhost"], "port": "4000", "path": ["api", "auth", "login"]}
+      }
+    },
+    {
+      "name": "AUTH - Profile",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+        "url": {"raw": "http://localhost:4000/api/auth/profile", "protocol": "http", "host": ["localhost"], "port": "4000", "path": ["api", "auth", "profile"]}
+      }
+    },
+    {
+      "name": "AUTH - Create User (ADMIN)",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}, {"key": "Content-Type", "value": "application/json"}],
+        "body": {"mode": "raw", "raw": "{\n  \"username\": \"user1\",\n  \"email\": \"user1@test.com\",\n  \"password\": \"pass123\"\n}"},
+        "url": {"raw": "http://localhost:4000/api/users", "protocol": "http", "host": ["localhost"], "port": "4000", "path": ["api", "users"]}
+      }
+    },
+    {
+      "name": "AUTH - Assign Role",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}, {"key": "Content-Type", "value": "application/json"}],
+        "body": {"mode": "raw", "raw": "{\n  \"user_id\": \"{{userId}}\",\n  \"role_id\": \"{{roleId}}\"\n}"},
+        "url": {"raw": "http://localhost:4000/api/user-roles", "protocol": "http", "host": ["localhost"], "port": "4000", "path": ["api", "user-roles"]}
+      }
+    },
+    {
+      "name": "STEGO - Analyze",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+        "body": {"mode": "formdata", "formdata": [{"key": "file", "type": "file", "src": []}]},
+        "url": {"raw": "http://localhost:5000/api/steganography/analyze", "protocol": "http", "host": ["localhost"], "port": "5000", "path": ["api", "steganography", "analyze"]}
+      }
+    }
+  ]
+}

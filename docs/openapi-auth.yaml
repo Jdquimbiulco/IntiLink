@@ -1,0 +1,122 @@
+openapi: 3.0.3
+info:
+  title: IntiLink Auth Service
+  description: Autenticación, autorización JWT/RBAC
+  version: 1.0.0
+servers:
+  - url: http://localhost:4000
+paths:
+  /api/auth/login:
+    post:
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [username, password]
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+  /api/auth/profile:
+    get:
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+  /api/auth/logout:
+    post:
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+  /api/users:
+    get:
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+    post:
+      security:
+        - bearerAuth: []
+      responses:
+        '201':
+          description: Created
+  /api/roles:
+    get:
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+    post:
+      security:
+        - bearerAuth: []
+      responses:
+        '201':
+          description: Created
+  /api/user-roles:
+    post:
+      security:
+        - bearerAuth: []
+      responses:
+        '201':
+          description: Created
+  /api/user-roles/{id}:
+    delete:
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /internal/authorization/check:
+    post:
+      security:
+        - serviceToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [subject_token, action]
+              properties:
+                subject_token:
+                  type: string
+                action:
+                  type: string
+                resource_id:
+                  type: string
+                  nullable: true
+      responses:
+        '200':
+          description: Allowed
+        '403':
+          description: Denied
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    serviceToken:
+      type: apiKey
+      in: header
+      name: x-service-token
