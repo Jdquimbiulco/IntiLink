@@ -17,11 +17,12 @@ export async function verifyPassword(hash: string, password: string): Promise<bo
 
 export function signToken(payload: object): string {
   const privateKey = fs.readFileSync(env.jwtPrivateKeyPath);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return jwt.sign(payload, privateKey, {
     algorithm: "RS256",
     issuer: env.jwtIssuer,
     audience: env.jwtAudience,
-    expiresIn: env.jwtExpiresIn
+    expiresIn: env.jwtExpiresIn as any
   });
 }
 

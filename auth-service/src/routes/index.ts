@@ -21,6 +21,7 @@ router.get("/api/roles", authenticate, requireRole(["ADMIN"]), authController.li
 router.patch("/api/roles/:id", authenticate, requireRole(["ADMIN"]), authController.updateRole);
 
 router.post("/api/user-roles", authenticate, requireRole(["ADMIN"]), authController.assignRole);
+router.get("/api/user-roles", authenticate, requireRole(["ADMIN"]), authController.listUserRoles);
 router.delete("/api/user-roles/:id", authenticate, requireRole(["ADMIN"]), authController.removeRole);
 
 router.post("/internal/authorization/check", serviceAuth, authController.internalCheck);

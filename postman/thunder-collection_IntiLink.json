@@ -1,0 +1,351 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "IntiLink",
+    "collectionId": "57773310-0f3c-4d56-9115-4eeb249699ed",
+    "dateExported": "2026-11-02T21:57:04.437Z",
+    "version": "1.4",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "06129bf0-556f-4981-a762-ca2939c16f7e",
+            "colId": "57773310-0f3c-4d56-9115-4eeb249699ed",
+            "containerId": "",
+            "name": "Login",
+            "url": "http://localhost:4000/api/auth/login",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2026-11-02T04:15:49.488Z",
+            "modified": "2026-11-02T04:15:49.488Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": [
+                    "{",
+                    "  \"username\": \"analyst1\",",
+                    "  \"password\": \"Analyst123!\"",
+                    "}"
+                ],
+                "form": []
+            }
+        },
+        {
+            "_id": "382c7907-dd78-4254-ac71-94cc9b2a267e",
+            "colId": "57773310-0f3c-4d56-9115-4eeb249699ed",
+            "containerId": "",
+            "name": "CreacionAnalista",
+            "url": "http://localhost:4000/api/users",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2026-11-02T04:22:13.031Z",
+            "modified": "2026-11-02T04:22:13.031Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": [
+                    "{\"username\":\"analyst1\",\"email\":\"analyst1@intilink.com\",\"password\":\"Analyst123!\"}"
+                ],
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMzllMzhhOC00NzA4LTQ1MGEtYjA3ZC04ZDhlOWU3ZDA3ZWEiLCJ1c2VybmFtZSI6ImFkbWluIiwiaWF0IjoxNzkzNTkzMzA2LCJleHAiOjE3OTM1OTQyMDYsImF1ZCI6ImludGlsaW5rLXNlcnZpY2VzIiwiaXNzIjoiaW50aWxpbmstYXV0aCJ9.Gw0UzfpzDdKyTjoG7g6KFB-hOt6VnZhgmLCkmiQAd8KSd5Jsbw1hAFrzF4kf5kFPZAlulg_4iAiV8LILiQmrfLEz8xjk8vD8p1aj7Eu1yQ7SeyY8OfGCmyQSvbqMKKe0sxX7oGcKO7z6XTLyLAte021p5s_zEhhQLll0HVk9EzDAXieniW-5unXz88ICwJPqiCsySmbIDFMxQI2zfSMe5b78CZ_-es6A7dZUebMBF5dJswQQdnAKZ43rsfT7i5cBu4MyVlbW8OCMnW4K62UrrkZWVPW5GBbjIfj4TZAt2nol9o_O5JKb47f7zSD65U3_Pr_haoQnvCkd8IRGGQaxYQ"
+            }
+        },
+        {
+            "_id": "5d7da1bb-3a98-4f4f-af5a-ab11a3c5b6ec",
+            "colId": "57773310-0f3c-4d56-9115-4eeb249699ed",
+            "containerId": "",
+            "name": "CreacionUsuario1",
+            "url": "http://localhost:4000/api/users",
+            "method": "POST",
+            "sortNum": 40000,
+            "created": "2026-11-02T04:23:22.681Z",
+            "modified": "2026-11-02T04:23:22.681Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": [
+                    "{\"username\":\"user1\",\"email\":\"user1@intilink.com\",\"password\":\"User123!\"}"
+                ],
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMzllMzhhOC00NzA4LTQ1MGEtYjA3ZC04ZDhlOWU3ZDA3ZWEiLCJ1c2VybmFtZSI6ImFkbWluIiwiaWF0IjoxNzkzNTkzMzA2LCJleHAiOjE3OTM1OTQyMDYsImF1ZCI6ImludGlsaW5rLXNlcnZpY2VzIiwiaXNzIjoiaW50aWxpbmstYXV0aCJ9.Gw0UzfpzDdKyTjoG7g6KFB-hOt6VnZhgmLCkmiQAd8KSd5Jsbw1hAFrzF4kf5kFPZAlulg_4iAiV8LILiQmrfLEz8xjk8vD8p1aj7Eu1yQ7SeyY8OfGCmyQSvbqMKKe0sxX7oGcKO7z6XTLyLAte021p5s_zEhhQLll0HVk9EzDAXieniW-5unXz88ICwJPqiCsySmbIDFMxQI2zfSMe5b78CZ_-es6A7dZUebMBF5dJswQQdnAKZ43rsfT7i5cBu4MyVlbW8OCMnW4K62UrrkZWVPW5GBbjIfj4TZAt2nol9o_O5JKb47f7zSD65U3_Pr_haoQnvCkd8IRGGQaxYQ"
+            }
+        },
+        {
+            "_id": "8e47faa1-0ee5-43c2-8baa-87a745256bae",
+            "colId": "57773310-0f3c-4d56-9115-4eeb249699ed",
+            "containerId": "",
+            "name": "VerRoles",
+            "url": "http://localhost:4000/api/roles",
+            "method": "GET",
+            "sortNum": 50000,
+            "created": "2026-11-02T04:26:53.998Z",
+            "modified": "2026-11-02T04:26:53.998Z",
+            "headers": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMzllMzhhOC00NzA4LTQ1MGEtYjA3ZC04ZDhlOWU3ZDA3ZWEiLCJ1c2VybmFtZSI6ImFkbWluIiwiaWF0IjoxNzkzNjU2MDE4LCJleHAiOjE3OTM2NTY5MTgsImF1ZCI6ImludGlsaW5rLXNlcnZpY2VzIiwiaXNzIjoiaW50aWxpbmstYXV0aCJ9.R6Pj7Fo1ENSmFdClxf_Gg_hROzyL8HU7d-ovD9drvpITWUrlQjDLO5rvcSC29jeMtUpsz1yXRHiHYOFiiqALvKr3dgXArdiKn18quGRJjNiQTfAQD0EorxGE2O15jbkAbtcJRoled6i-WQCAEnxs7EXcZhcKda78XMpJNVJBnemBemrsPqe6i-wUBoGbm7HhnntV2J-JxIqC5AkYOYCj1RgkwcBAAaZvUefIL1Ur1WsvgY5wH_Siaym53lra47-tnF9QYUSFNoZOxwNhaqovBJbgI6P86gnql2sdvUf7OFEWN_PesYtIsazUuocgP20iEODMuw7l5Nayeffpkcx7DQ"
+            }
+        },
+        {
+            "_id": "ba24339f-1cf7-4b2b-8dab-1e58db1e711b",
+            "colId": "57773310-0f3c-4d56-9115-4eeb249699ed",
+            "containerId": "",
+            "name": "VerUsuarios",
+            "url": "http://localhost:4000/api/users",
+            "method": "GET",
+            "sortNum": 60000,
+            "created": "2026-11-02T04:28:57.100Z",
+            "modified": "2026-11-02T04:28:57.100Z",
+            "headers": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMzllMzhhOC00NzA4LTQ1MGEtYjA3ZC04ZDhlOWU3ZDA3ZWEiLCJ1c2VybmFtZSI6ImFkbWluIiwiaWF0IjoxNzkzNjU2MDE4LCJleHAiOjE3OTM2NTY5MTgsImF1ZCI6ImludGlsaW5rLXNlcnZpY2VzIiwiaXNzIjoiaW50aWxpbmstYXV0aCJ9.R6Pj7Fo1ENSmFdClxf_Gg_hROzyL8HU7d-ovD9drvpITWUrlQjDLO5rvcSC29jeMtUpsz1yXRHiHYOFiiqALvKr3dgXArdiKn18quGRJjNiQTfAQD0EorxGE2O15jbkAbtcJRoled6i-WQCAEnxs7EXcZhcKda78XMpJNVJBnemBemrsPqe6i-wUBoGbm7HhnntV2J-JxIqC5AkYOYCj1RgkwcBAAaZvUefIL1Ur1WsvgY5wH_Siaym53lra47-tnF9QYUSFNoZOxwNhaqovBJbgI6P86gnql2sdvUf7OFEWN_PesYtIsazUuocgP20iEODMuw7l5Nayeffpkcx7DQ"
+            }
+        },
+        {
+            "_id": "016ab8b5-2a8c-400d-a0d5-5e2816de005e",
+            "colId": "57773310-0f3c-4d56-9115-4eeb249699ed",
+            "containerId": "",
+            "name": "Perfiles",
+            "url": "http://localhost:4000/api/auth/profile",
+            "method": "GET",
+            "sortNum": 70000,
+            "created": "2026-11-02T04:44:43.615Z",
+            "modified": "2026-11-02T04:44:43.615Z",
+            "headers": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDM0YzJkNS03OTZkLTQ1ZDgtOTYxYS1kNWUyYWMwOWEwMWEiLCJ1c2VybmFtZSI6ImFuYWx5c3QxIiwiaWF0IjoxNzkzNjQxOTI1LCJleHAiOjE3OTM2NDI4MjUsImF1ZCI6ImludGlsaW5rLXNlcnZpY2VzIiwiaXNzIjoiaW50aWxpbmstYXV0aCJ9.7Gh8ykwgwyUaSwe-cgqEhSCLPfmNTNpa4UildyoaN-TRU9gl-r0dWuoQVG143-3lGNcJ_iSz-w88tV9anico5xf1sjND4eBAUfV2AviF_cYp-fsRTyFYHi_DTmiV8_h2hj7DO3khxuHR3SFe5Y7I4Cb1pHXYNLpBHVuglR_jaJ4CR4-bLtLzfmWb9qMlHMUlZNNzYr2uTIXBpcOsg8MSUP1tDgTUafnO1JOxE9Q7MYAOusmBcbEPb6yQksdg7qYoI7wZ-Hni8qNwPcUqHK7AdJLvhbdE1sXHQn2bicMc0583Dj090hDdnRI7FKyucEPV7d5bpZhvaIYd6txXzyvDkA"
+            }
+        },
+        {
+            "_id": "d40dc269-12e6-438d-aaa0-b31f1d0c6c65",
+            "colId": "57773310-0f3c-4d56-9115-4eeb249699ed",
+            "containerId": "",
+            "name": "AsignarRolAnalista",
+            "url": "http://localhost:4000/api/user-roles",
+            "method": "POST",
+            "sortNum": 80000,
+            "created": "2026-11-02T05:00:39.334Z",
+            "modified": "2026-11-02T05:00:39.334Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": [
+                    "{",
+                    "  \"user_id\": \"6434c2d5-796d-45d8-961a-d5e2ac09a01a\",",
+                    "  \"role_id\": \"1ac196fa-920c-47f5-9214-7ed82a6eaaac\"",
+                    "}"
+                ],
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMzllMzhhOC00NzA4LTQ1MGEtYjA3ZC04ZDhlOWU3ZDA3ZWEiLCJ1c2VybmFtZSI6ImFkbWluIiwiaWF0IjoxNzkzNjU2MDE4LCJleHAiOjE3OTM2NTY5MTgsImF1ZCI6ImludGlsaW5rLXNlcnZpY2VzIiwiaXNzIjoiaW50aWxpbmstYXV0aCJ9.R6Pj7Fo1ENSmFdClxf_Gg_hROzyL8HU7d-ovD9drvpITWUrlQjDLO5rvcSC29jeMtUpsz1yXRHiHYOFiiqALvKr3dgXArdiKn18quGRJjNiQTfAQD0EorxGE2O15jbkAbtcJRoled6i-WQCAEnxs7EXcZhcKda78XMpJNVJBnemBemrsPqe6i-wUBoGbm7HhnntV2J-JxIqC5AkYOYCj1RgkwcBAAaZvUefIL1Ur1WsvgY5wH_Siaym53lra47-tnF9QYUSFNoZOxwNhaqovBJbgI6P86gnql2sdvUf7OFEWN_PesYtIsazUuocgP20iEODMuw7l5Nayeffpkcx7DQ"
+            }
+        },
+        {
+            "_id": "ff0b6a4f-4c76-40b3-bb99-cf14b0d547a9",
+            "colId": "57773310-0f3c-4d56-9115-4eeb249699ed",
+            "containerId": "",
+            "name": "AsignarRolUser",
+            "url": "http://localhost:4000/api/user-roles",
+            "method": "POST",
+            "sortNum": 90000,
+            "created": "2026-11-02T17:42:44.559Z",
+            "modified": "2026-11-02T17:42:44.559Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": [
+                    "{",
+                    "  \"user_id\": \"6434c2d5-796d-45d8-961a-d5e2ac09a01a\",",
+                    "  \"role_id\": \"d583c407-c638-47e0-940a-aa976466b1d4\"",
+                    "}"
+                ],
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMzllMzhhOC00NzA4LTQ1MGEtYjA3ZC04ZDhlOWU3ZDA3ZWEiLCJ1c2VybmFtZSI6ImFkbWluIiwiaWF0IjoxNzkzNjQxNzQwLCJleHAiOjE3OTM2NDI2NDAsImF1ZCI6ImludGlsaW5rLXNlcnZpY2VzIiwiaXNzIjoiaW50aWxpbmstYXV0aCJ9.RvF7pSJBPl6leRAggtBUdHeND4U_3_AGQIBt-mHnH8TiRQ7e0VCojXEvlg_s66rej73opGcxKROf1-Eg8NdTm6PFXJ-IPno6T2DJS-TpgFskyf0lQ5avVL1P4W8WK4A0meWZ1dPMEIjj0UEa8CqWpRP1L3Rp4Bc1EKNOg0RkG3EOugpQ-y7m-lad34KRqwDte7upuV8FpFoRC3tv8tDePkxWx14Hsc_GuRiOeSHvkcc6LTSQG_JfTxAY2uQ-0lQLiwW-Gt3ndMWkBBtfXsaCvwnB1v7zv1y7AA8X2jb_CJRtvnvOPIoadr3Yb_CR1nv4Bvirkxqz6LgQU3u-t6KFaw"
+            }
+        },
+        {
+            "_id": "c9b9bb9a-d881-4aec-8367-194c4b313bcc",
+            "colId": "57773310-0f3c-4d56-9115-4eeb249699ed",
+            "containerId": "",
+            "name": "AccesoSTEGO",
+            "url": "http://localhost:5000/api/steganography/analyze",
+            "method": "POST",
+            "sortNum": 100000,
+            "created": "2026-11-02T20:36:16.627Z",
+            "modified": "2026-11-02T20:36:16.627Z",
+            "headers": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDM0YzJkNS03OTZkLTQ1ZDgtOTYxYS1kNWUyYWMwOWEwMWEiLCJ1c2VybmFtZSI6ImFuYWx5c3QxIiwiaWF0IjoxNzkzNjUxNzIxLCJleHAiOjE3OTM2NTI2MjEsImF1ZCI6ImludGlsaW5rLXNlcnZpY2VzIiwiaXNzIjoiaW50aWxpbmstYXV0aCJ9.5RDdDLm_oUuLFip7OvS5bSxP1hlfV-ceftNLKePJ3ddKMMEKPQV5qrkEdLjzHbQDpqq9-BB4QxP9FPsfyB9ykTzNYQHcPZf7BIRBZUBNzwm89OnItZMA3RTScyOAIQq6i3P-sOTRj56puD1wH55baEnulhvBBS-eJv3gDg-B0ehGi6VhH3hmpPPtqSYePLGPO3G66OTNijQSy_PpwkU_nvUMnNEgmNQyYoFxLcjmSN23OrJREFMGw44LrlQ9OokGrOhdMftiB0SMnUOjvUs9K4Z7JOtrdgMqZMV9m6HhGc5lKILxvDPkIP9iPZv9XTmnFv42QkdS4oar-l1Jr0kyWg"
+            }
+        },
+        {
+            "_id": "a71bc75b-ed6c-4122-a7f0-2701bb7d6a92",
+            "colId": "57773310-0f3c-4d56-9115-4eeb249699ed",
+            "containerId": "",
+            "name": "UserAnalizar",
+            "url": "http://localhost:5000/api/steganography/analyze",
+            "method": "POST",
+            "sortNum": 110000,
+            "created": "2026-11-02T20:40:17.931Z",
+            "modified": "2026-11-02T20:40:17.931Z",
+            "headers": [],
+            "body": {
+                "type": "formdata",
+                "raw": [],
+                "form": [],
+                "files": [
+                    {
+                        "name": "file",
+                        "value": "/home/juanito/Documents/Materias/SoftwareSeguro/Proyecto/IntiLink/imagen_limpia.png"
+                    }
+                ]
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxOTBiMGE4NC0zZDUzLTQ5M2YtYTkzZC1iYTdiZmZkMDk1OGMiLCJ1c2VybmFtZSI6InVzZXIxIiwiaWF0IjoxNzkzNjUyMDM1LCJleHAiOjE3OTM2NTI5MzUsImF1ZCI6ImludGlsaW5rLXNlcnZpY2VzIiwiaXNzIjoiaW50aWxpbmstYXV0aCJ9.1KsgedLYqb0dW1wLqIfsfKpdyuEADgtSV_DerJOjaBApLDB4WWwUmfYg6TSiXyQTRYimwej8lu89TC-4XImXAr5pnAqkQ3iRcH2q14tx9VGcbp-LjKbQt9PN1pXwNBL6pGUmf1b6WwPZWTXvIgmpU0OMxT1qHWon84IHt4hAFwubLCFmrj6lgEZzWfOMK6EZgjI_UeBedxdRi0Mp2Y-euckH7ZZseGz6X01XPURqKhAh_BGUgJ0y6MyMyEWkTC5YHX1His9K0NdTtdQit-en5wLN738vnmoj3VPpLRapF59WKuKlQwrMBXfomTwGSoddpL8jDbdhfgoNvsq6wRzcdA"
+            }
+        },
+        {
+            "_id": "ffd4e04d-fd2e-44b1-b7df-f531d9751dba",
+            "colId": "57773310-0f3c-4d56-9115-4eeb249699ed",
+            "containerId": "",
+            "name": "Analist1Analize",
+            "url": "http://localhost:5000/api/steganography/analyze",
+            "method": "POST",
+            "sortNum": 120000,
+            "created": "2026-11-02T20:49:33.069Z",
+            "modified": "2026-11-02T20:49:33.069Z",
+            "headers": [],
+            "body": {
+                "type": "formdata",
+                "raw": [],
+                "form": [],
+                "files": [
+                    {
+                        "name": "file",
+                        "value": "/home/juanito/Documents/Materias/SoftwareSeguro/Proyecto/IntiLink/imagen_limpia.png"
+                    }
+                ]
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDM0YzJkNS03OTZkLTQ1ZDgtOTYxYS1kNWUyYWMwOWEwMWEiLCJ1c2VybmFtZSI6ImFuYWx5c3QxIiwiaWF0IjoxNzkzNjU2MjYzLCJleHAiOjE3OTM2NTcxNjMsImF1ZCI6ImludGlsaW5rLXNlcnZpY2VzIiwiaXNzIjoiaW50aWxpbmstYXV0aCJ9.L1mr4yJbCKJ3w7704WqQI18je_CXKMEtOHIq393s8cNfP3ZSrTcZMHCSLUHgSyXHdrg2IzyLokSpKR4c1AqLafX3wfeaYElhxgyMHi2_g-6zF_M7r6hFnBDwLG9vj7BuiX16FaLTT9rraJDm20YVOwQNjkYXv8fE9nwq1zzPgcustc5q_eLbCDZAYMiXQLjWNe9zSeSyrKXryazDDm_ShezXWocQn5wuFGkg-od44jFkBgnW9HtJ9JmlRcGKNlYma0AGE7x8szHB3M96f8z6nu4SSOms2zElY5rNZINr0E4jGJoP-FCIVRCaO4WPJm8GscUG7nTNZWrCcXbWw_VBUg"
+            }
+        },
+        {
+            "_id": "4f0cb8b7-0c8b-484a-b3c5-8851056ff610",
+            "colId": "57773310-0f3c-4d56-9115-4eeb249699ed",
+            "containerId": "",
+            "name": "ImagenLSB",
+            "url": "http://localhost:5000/api/steganography/analyze",
+            "method": "POST",
+            "sortNum": 130000,
+            "created": "2026-11-02T20:52:40.083Z",
+            "modified": "2026-11-02T20:52:40.083Z",
+            "headers": [],
+            "body": {
+                "type": "formdata",
+                "raw": [],
+                "form": [],
+                "files": [
+                    {
+                        "name": "file",
+                        "value": "/home/juanito/Documents/Materias/SoftwareSeguro/Proyecto/IntiLink/imagen_con_lsb.png"
+                    }
+                ]
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDM0YzJkNS03OTZkLTQ1ZDgtOTYxYS1kNWUyYWMwOWEwMWEiLCJ1c2VybmFtZSI6ImFuYWx5c3QxIiwiaWF0IjoxNzkzNjU2MjYzLCJleHAiOjE3OTM2NTcxNjMsImF1ZCI6ImludGlsaW5rLXNlcnZpY2VzIiwiaXNzIjoiaW50aWxpbmstYXV0aCJ9.L1mr4yJbCKJ3w7704WqQI18je_CXKMEtOHIq393s8cNfP3ZSrTcZMHCSLUHgSyXHdrg2IzyLokSpKR4c1AqLafX3wfeaYElhxgyMHi2_g-6zF_M7r6hFnBDwLG9vj7BuiX16FaLTT9rraJDm20YVOwQNjkYXv8fE9nwq1zzPgcustc5q_eLbCDZAYMiXQLjWNe9zSeSyrKXryazDDm_ShezXWocQn5wuFGkg-od44jFkBgnW9HtJ9JmlRcGKNlYma0AGE7x8szHB3M96f8z6nu4SSOms2zElY5rNZINr0E4jGJoP-FCIVRCaO4WPJm8GscUG7nTNZWrCcXbWw_VBUg"
+            }
+        },
+        {
+            "_id": "f65fc667-dcd8-46a0-adaf-6fbbc22cb830",
+            "colId": "57773310-0f3c-4d56-9115-4eeb249699ed",
+            "containerId": "",
+            "name": "FormatoNoAdmitido",
+            "url": "http://localhost:5000/api/steganography/analyze",
+            "method": "POST",
+            "sortNum": 140000,
+            "created": "2026-11-02T21:00:34.175Z",
+            "modified": "2026-11-02T21:00:34.175Z",
+            "headers": [],
+            "body": {
+                "type": "formdata",
+                "raw": [],
+                "form": [],
+                "files": [
+                    {
+                        "name": "file",
+                        "value": "/home/juanito/Documents/Materias/SoftwareSeguro/Proyecto/IntiLink/docs/matriz_riesgos.md"
+                    }
+                ]
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDM0YzJkNS03OTZkLTQ1ZDgtOTYxYS1kNWUyYWMwOWEwMWEiLCJ1c2VybmFtZSI6ImFuYWx5c3QxIiwiaWF0IjoxNzkzNjUyNDc0LCJleHAiOjE3OTM2NTMzNzQsImF1ZCI6ImludGlsaW5rLXNlcnZpY2VzIiwiaXNzIjoiaW50aWxpbmstYXV0aCJ9.0LO-tTCqMYESK4Nl_6KoTzI_JIxpp08LhNE94HGTARxrLOYgJqJAqtkzM9jb6-ukzPTiy7JYgpp9cebgYCzK1hIMeS-DaLZssY560M8uqzY43mGs6R82iB5fEGM3moPvC3mdm0HEb8B1UR3FJonylxMw7Tc69ZviWqyo9oW-8k-rdyMAUuiiECfZeHiuYeSslao88wTzl3qSohnWk630men-2SGGwcImVSrZI2HEsZpK3coCzO5zhASodqfYVzXxATGhzqilO4gOOguKxacJZGO1Ojqcu6974DLijqa7idMErq5LNM3VmOLnNCL2UHxhb1PBAJU5pFJqzpf65XA8hQ"
+            }
+        },
+        {
+            "_id": "01a672f9-aa4d-4c7b-8e10-46d882df55f8",
+            "colId": "57773310-0f3c-4d56-9115-4eeb249699ed",
+            "containerId": "",
+            "name": "ControlDeAcceso",
+            "url": "http://localhost:5000/api/steganography/results/33e180d7-88ce-4cdc-adb7-90ed336d2626",
+            "method": "GET",
+            "sortNum": 150000,
+            "created": "2026-11-02T21:02:22.312Z",
+            "modified": "2026-11-02T21:02:22.312Z",
+            "headers": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxOTBiMGE4NC0zZDUzLTQ5M2YtYTkzZC1iYTdiZmZkMDk1OGMiLCJ1c2VybmFtZSI6InVzZXIxIiwiaWF0IjoxNzkzNjUzNDEzLCJleHAiOjE3OTM2NTQzMTMsImF1ZCI6ImludGlsaW5rLXNlcnZpY2VzIiwiaXNzIjoiaW50aWxpbmstYXV0aCJ9.KfAoUpS7bpO6JrCdmFj2HGOh4aNFKZ3GC3HfqzX1L0Pywg4LE5lAOQNg7JlpjQ4t8ipFdPOS8KhYcpl_1ifftAWCYcsGjAMPSRf2bQtukl3ozhdJrMd8nllZyT_EuX0EoCExk-Ba95gQHTw5ApDYnRnbEZP1rSt9SuwJnoVG0-IeORt0LV8zzjmKeWvy0xzP7UYEt58NZqHE566tCLCnkVRXQF8nzop-zWB6zZSFA__tR2mK0LQckPafqMI0sQEHp6Ju9LcBzJ29vNqvwvPQBBd4UcZgAumlnulOqwEBf5_9hG9b9V6jboJD2RHcv93xlfUkkcvlZHUyknDgLxWDsg"
+            }
+        },
+        {
+            "_id": "f8a1e379-b2e4-4772-b65c-f3b9ca38e77e",
+            "colId": "57773310-0f3c-4d56-9115-4eeb249699ed",
+            "containerId": "",
+            "name": "RevocarRol",
+            "url": "http://localhost:4000/api/user-roles/571d69b1-9779-4f26-b473-27bc599a92b8",
+            "method": "DELETE",
+            "sortNum": 160000,
+            "created": "2026-11-02T21:15:29.507Z",
+            "modified": "2026-11-02T21:15:29.507Z",
+            "headers": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMzllMzhhOC00NzA4LTQ1MGEtYjA3ZC04ZDhlOWU3ZDA3ZWEiLCJ1c2VybmFtZSI6ImFkbWluIiwiaWF0IjoxNzkzNjU0MDU4LCJleHAiOjE3OTM2NTQ5NTgsImF1ZCI6ImludGlsaW5rLXNlcnZpY2VzIiwiaXNzIjoiaW50aWxpbmstYXV0aCJ9.5I5Ls9vAv5zu72gN6yUHN-7FLE0KaJ0D3Cga8A2bAPA-2OkRnKpGzP0EJUsLXqidffKZ3IpwtPk2XJNrSarhmFD_u8gNCSoFAcPl5o7MBggHQ32ndvKI46IhxcevAVo1_aLTa5kJHEqsmVYDHSQjlxWmRReHajao_o64tJN3-vTm9DJ8vssajQd0yMnqhV_i4vsOkuIZjZZ5t1F2fgG61JXzZLVAI-UHwl-c7vSUee9h14HePzD2IYUB3LoS9z2jyygZq1Wnn-1pzg8QqbRTRBOc9UdAkfnT07JFM0RDTwNQav4ZMdNNXqzcIOEuFyXaeMZZAG6lDSwGONTvjDivYQ"
+            }
+        },
+        {
+            "_id": "062cc356-cec3-4c33-a533-c6cbbff3236b",
+            "colId": "57773310-0f3c-4d56-9115-4eeb249699ed",
+            "containerId": "",
+            "name": "ConsultarUserROles",
+            "url": "http://localhost:4000/api/user-roles",
+            "method": "GET",
+            "sortNum": 170000,
+            "created": "2026-11-02T21:40:34.014Z",
+            "modified": "2026-11-02T21:40:34.015Z",
+            "headers": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMzllMzhhOC00NzA4LTQ1MGEtYjA3ZC04ZDhlOWU3ZDA3ZWEiLCJ1c2VybmFtZSI6ImFkbWluIiwiaWF0IjoxNzkzNjU2MDE4LCJleHAiOjE3OTM2NTY5MTgsImF1ZCI6ImludGlsaW5rLXNlcnZpY2VzIiwiaXNzIjoiaW50aWxpbmstYXV0aCJ9.R6Pj7Fo1ENSmFdClxf_Gg_hROzyL8HU7d-ovD9drvpITWUrlQjDLO5rvcSC29jeMtUpsz1yXRHiHYOFiiqALvKr3dgXArdiKn18quGRJjNiQTfAQD0EorxGE2O15jbkAbtcJRoled6i-WQCAEnxs7EXcZhcKda78XMpJNVJBnemBemrsPqe6i-wUBoGbm7HhnntV2J-JxIqC5AkYOYCj1RgkwcBAAaZvUefIL1Ur1WsvgY5wH_Siaym53lra47-tnF9QYUSFNoZOxwNhaqovBJbgI6P86gnql2sdvUf7OFEWN_PesYtIsazUuocgP20iEODMuw7l5Nayeffpkcx7DQ"
+            }
+        }
+    ],
+    "ref": "I3DuRJ1IJAgODPsmxFyJUKE44QjnKsmsMC-vj-JaaI33xVd--8Af1vZi4iTWGZvwciLnRxZeMavBxh_QxswXCw"
+}
