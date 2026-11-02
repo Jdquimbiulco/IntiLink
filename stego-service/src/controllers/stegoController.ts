@@ -10,12 +10,14 @@ export class StegoController {
       const userId = req.user?.sub;
       const authz = await checkAuthorization(token, "steganography.analyze");
       if (!authz.allowed) {
+        console.warn(`[AUDIT] [STEGO_ANALYSIS_DENIED] User: ${userId} | Reason: ${authz.reason}`);
         return res.status(403).json({ error: "forbidden", reason: authz.reason });
       }
       if (!req.file) {
         return res.status(400).json({ error: "no_file" });
       }
       const result = stegoService.analyzeLSB(req.file, userId);
+      console.log(`[AUDIT] [STEGO_ANALYSIS_SUCCESS] User: ${userId} | File: '${req.file.originalname}' (${req.file.size} bytes) | SHA256: ${result.sha256} | Status: ${result.status} | Action: ${result.action}`);
       return res.json(result);
     } catch (e: any) {
       if (e.message === "no_file") return res.status(400).json({ error: "no_file" });
@@ -32,9 +34,11 @@ export class StegoController {
       const userId = req.user?.sub;
       const authz = await checkAuthorization(token, "steganography.results.read");
       if (!authz.allowed) {
+        console.warn(`[AUDIT] [STEGO_RESULT_DENIED] User: ${userId} | Reason: ${authz.reason}`);
         return res.status(403).json({ error: "forbidden", reason: authz.reason });
       }
       const result = stegoService.getResult(req.params.id, userId);
+      console.log(`[AUDIT] [STEGO_RESULT_ACCESSED] User: ${userId} | Analysis ID: ${req.params.id}`);
       return res.json(result);
     } catch (e: any) {
       if (e.message === "not_found") return res.status(404).json({ error: "not_found" });

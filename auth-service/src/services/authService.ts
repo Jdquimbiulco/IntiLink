@@ -5,10 +5,17 @@ export class AuthService {
   async login(username: string, password: string) {
     const result = await pool.query("SELECT * FROM users WHERE username = $1 OR email = $1", [username]);
     const user = result.rows[0];
-    if (!user || user.status !== "active") throw new Error("invalid_credentials");
+    if (!user || user.status !== "active") {
+      console.warn(`[AUDIT] [LOGIN_FAILED] Invalid username or inactive user: '${username}'`);
+      throw new Error("invalid_credentials");
+    }
     const ok = await verifyPassword(user.password_hash, password);
-    if (!ok) throw new Error("invalid_credentials");
+    if (!ok) {
+      console.warn(`[AUDIT] [LOGIN_FAILED] Bad password for user: '${username}'`);
+      throw new Error("invalid_credentials");
+    }
     const token = signToken({ sub: user.id, username: user.username });
+    console.log(`[AUDIT] [LOGIN_SUCCESS] User '${user.username}' (id: ${user.id}) logged in successfully`);
     return { access_token: token, token_type: "Bearer", expires_in: "15m" };
   }
 
@@ -78,15 +85,31 @@ export class AuthService {
         "INSERT INTO user_roles (user_id, role_id) VALUES ($1,$2) RETURNING *",
         [user_id, role_id]
       );
+      console.log(`[AUDIT] [ROLE_ASSIGNED] Assignment id: ${result.rows[0].id} | user_id: ${user_id} | role_id: ${role_id}`);
       return result.rows[0];
     } catch (e: any) {
-      if (e.code === "23505") throw new Error("duplicate_assignment");
+      if (e.code === "23505") {
+        console.warn(`[AUDIT] [ROLE_ASSIGNMENT_DUPLICATE] Duplicate role assignment attempt for user: ${user_id}, role: ${role_id}`);
+        throw new Error("duplicate_assignment");
+      }
       throw e;
     }
   }
 
+  async listUserRoles() {
+    const result = await pool.query(`
+      SELECT ur.id, ur.user_id, u.username, ur.role_id, r.name AS role_name, ur.assigned_at
+      FROM user_roles ur
+      JOIN users u ON u.id = ur.user_id
+      JOIN roles r ON r.id = ur.role_id
+      ORDER BY ur.assigned_at DESC
+    `);
+    return result.rows;
+  }
+
   async removeRole(id: string) {
     await pool.query("DELETE FROM user_roles WHERE id = $1", [id]);
+    console.log(`[AUDIT] [ROLE_REMOVED] Assignment id: ${id} revoked successfully`);
     return { removed: true };
   }
 
@@ -105,13 +128,17 @@ export class AuthService {
       const roles = result.rows.map((r: any) => r.name);
       // RBAC policy
       if (action === "steganography.analyze" && (roles.includes("ADMIN") || roles.includes("ANALYST"))) {
+        console.log(`[AUDIT] [AUTHZ_DECISION] User: ${userId} | Action: ${action} | Decision: ALLOWED | Reason: active_role_grants_permission`);
         return { subject_id: userId, action, allowed: true, reason: "active_role_grants_permission" };
       }
       if (action === "steganography.results.read" && roles.length > 0) {
+        console.log(`[AUDIT] [AUTHZ_DECISION] User: ${userId} | Action: ${action} | Decision: ALLOWED | Reason: active_role_grants_permission`);
         return { subject_id: userId, action, allowed: true, reason: "active_role_grants_permission" };
       }
+      console.warn(`[AUDIT] [AUTHZ_DECISION] User: ${userId} | Action: ${action} | Decision: DENIED | Reason: insufficient_role`);
       return { subject_id: userId, action, allowed: false, reason: "insufficient_role" };
     } catch (e) {
+      console.error(`[AUDIT] [AUTHZ_DECISION] Invalid token or verification failure`);
       return { allowed: false, reason: "invalid_token_or_context" };
     }
   }

@@ -1,10 +1,17 @@
-# Matriz de Riesgos
+# 🛡️ Matriz de Activos, Amenazas, Vulnerabilidades, Riesgos y Controles
 
-| Activo | Amenaza | Vulnerabilidad | Riesgo | Control | Estado |
-|---|---|---|---|---|---|
-| Credenciales | Suplantación | Contraseñas débiles/almacenamiento | Alto | Argon2id, rate-limit login | Aplicado |
-| JWT | Falsificación | Algoritmo débil/clave expuesta | Alto | RS256, clave privada en AUTH, verificación con pubkey | Aplicado |
-| RBAC | Elevación privilegios | Confianza en claims JWT | Alto | Autorización vigente en AUTH por cada operación | Aplicado |
-| Comunicación AUTH-STEGO | Spoofing servicio | Sin autenticación mutua | Alto | x-service-token, timeout, denegación por defecto | Aplicado |
-| Archivos | Upload malicioso | Sin validación | Alto | Magic numbers, MIME/ext, tamaño, memoryStorage | Aplicado |
-| Revocación roles | Sesión prolongada | JWT no revocable | Alto | Consulta roles activos en AUTH al autorizar | Aplicado |
+**Metodología:** Shift Left Security & Secure by Design  
+**Estándares de Referencia:** ISO/IEC 27001:2022, ISO/IEC 27034-1:2011, OWASP ASVS v5.0, NIST SP 800-207 (Zero Trust)  
+
+---
+
+| Activo | Amenaza | Vulnerabilidad | Nivel de Riesgo | Control de Seguridad Implementado | Principio / Estándar | Estado |
+|---|---|---|:---:|---|---|:---:|
+| **Credenciales e Identidades** | Suplantación de identidad (Spoofing) y ataques de fuerza bruta | Almacenamiento débil de contraseñas y falta de límites en endpoints de login | **Alto** | Hashing con **Argon2id** (resistente a ataques GPU/ASIC) y `express-rate-limit` (máximo 10 intentos/min por IP en `/api/auth/login`). | ISO/IEC 27001 A.8.5<br>OWASP ASVS V2 | **Mitigado** |
+| **Asignaciones de Privilegios (N:M)** | Elevación de privilegios horizontal o vertical | Inconsistencias lógicas o duplicidad en tabla asociativa de roles | **Alto** | Claves foráneas con integridad referencial, restricción `UNIQUE(user_id, role_id)` y auditoría de asignaciones. Retorno estricto de HTTP 409 ante duplicados. | Least Privilege<br>ISO/IEC 27034 | **Mitigado** |
+| **Tokens de Sesión (JWT)** | Falsificación de firmas, robo o replay attacks | Criptografía simétrica vulnerable o claves privadas expuestas | **Crítico** | Firma asimétrica **RS256** (RSA 2048-bit). La clave privada solo existe en AUTH. Expiración acotada a **15 minutos** con claims validados (`iss`, `aud`, `sub`). | RFC 8725<br>Zero Trust | **Mitigado** |
+| **Comunicación AUTH ↔ STEGO** | Falsificación de servicio interno (Service Spoofing) | Canal interno sin autenticación mutua o confianza ciega | **Alto** | Autenticación de servicio mediante encabezado `x-service-token` en `/internal/authorization/check`. Política de **denegación por defecto (fail-secure)** si AUTH no responde. | Zero Trust Architecture<br>NIST SP 800-207 | **Mitigado** |
+| **Archivos Multimedia** | Carga de código ejecutable (Web Shells) o desbordamiento de búfer | Confianza en la extensión declarada por el usuario o imágenes gigantescas | **Crítico** | Validación estricta multinivel: extensión permitida (`.png`, `.bmp`), MIME type real, límite de 5 MB y comprobación de **Magic Bytes** (`0x89504E47` y `0x424D`). Procesamiento en memoria sin escribir a disco. | OWASP File Upload Cheat Sheet | **Mitigado** |
+| **Revocación de Permisos** | Reutilización de JWT de usuarios degradados o cesados | Naturaleza stateless del JWT que ignora cambios en BD | **Crítico** | Validación de autorización en tiempo real: STEGO consulta la vigencia activa de los roles en la BD de AUTH antes de procesar el archivo. | Continuous Adaptive Trust (Zero Trust) | **Mitigado** |
+| **Resultados de Análisis** | Acceso no autorizado a información ajena (IDOR) | Identificadores secuenciales o falta de verificación de propiedad | **Medio** | Identificadores no predecibles (**UUIDv4**) y comprobación de que el solicitante sea el propietario del resultado (`result.user_id === userId`). HTTP 403 ante intentos ajenos. | OWASP Top 10 (Broken Object Level Auth) | **Mitigado** |
+| **Bitácoras y Registros** | Fuga de credenciales o pérdida de trazabilidad (DLP) | Impresión de contraseñas, secretos o JWTs completos en logs | **Medio** | Sistema centralizado `[AUDIT]` con timestamp, IP, duración y evento. **Enmascaramiento de tokens** (`Bearer eyJhbG...VzH6DBrQ`) y omisión total de contraseñas. | ISO/IEC 27001 A.8.15<br>OWASP Logging Guide | **Mitigado** |

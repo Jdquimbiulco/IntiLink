@@ -94,6 +94,15 @@ export class AuthController {
     return res.json(result);
   }
 
+  async listUserRoles(req: Request, res: Response) {
+    try {
+      const list = await authService.listUserRoles();
+      return res.json(list);
+    } catch (e) {
+      return res.status(500).json({ error: "internal_error" });
+    }
+  }
+
   async internalCheck(req: Request, res: Response) {
     try {
       const { subject_token, action } = req.body;
