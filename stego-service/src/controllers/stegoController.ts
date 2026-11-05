@@ -6,8 +6,9 @@ import { stegoService } from "../services/stegoService";
 export class StegoController {
   async analyze(req: AuthRequest, res: Response) {
     try {
-      const token = (req as any).token;
+      const token = req.token;
       const userId = req.user?.sub;
+      if (!token || !userId) return res.status(401).json({ error: "unauthorized" });
       const authz = await checkAuthorization(token, "steganography.analyze");
       if (!authz.allowed) {
         console.warn(`[AUDIT] [STEGO_ANALYSIS_DENIED] User: ${userId} | Reason: ${authz.reason}`);
@@ -30,8 +31,9 @@ export class StegoController {
 
   async getResult(req: AuthRequest, res: Response) {
     try {
-      const token = (req as any).token;
+      const token = req.token;
       const userId = req.user?.sub;
+      if (!token || !userId) return res.status(401).json({ error: "unauthorized" });
       const authz = await checkAuthorization(token, "steganography.results.read");
       if (!authz.allowed) {
         console.warn(`[AUDIT] [STEGO_RESULT_DENIED] User: ${userId} | Reason: ${authz.reason}`);

@@ -20,7 +20,8 @@ export class AuthController {
       const userId = req.user?.sub;
       const profile = await authService.getProfile(userId);
       return res.json(profile);
-    } catch (e) {
+    } catch (e: any) {
+      if (e.message === "inactive_user") return res.status(403).json({ error: "forbidden" });
       return res.status(404).json({ error: "not_found" });
     }
   }

@@ -1,4 +1,5 @@
 import express from "express";
+import https from "https";
 import helmet from "helmet";
 import cors from "cors";
 import fs from "fs";
@@ -46,6 +47,11 @@ async function start() {
 
   app.listen(env.port, () => {
     console.log(`Auth service running on port ${env.port}`);
+  });
+  const tlsKey = fs.readFileSync(env.tlsKeyPath);
+  const tlsCert = fs.readFileSync(env.tlsCertPath);
+  https.createServer({ key: tlsKey, cert: tlsCert }, app).listen(env.internalPort, () => {
+    console.log(`Auth internal authorization service running on HTTPS port ${env.internalPort}`);
   });
 }
 

@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
+import { PNG } from "pngjs";
 import { env } from "../config/env";
 import { v4 as uuidv4 } from "uuid";
 
@@ -11,110 +12,136 @@ export interface AnalysisResult {
   sha256: string;
   technique: string;
   status: "sin_indicios" | "sospechoso" | "no_concluyentes" | "error";
-  indicators: any;
+  indicators: { anomaly_score?: number; ratio?: number; threshold?: number; reason?: string };
   action: "rechazo" | "cuarentena" | "advertencia" | "ninguna";
   limitations: string;
   created_at: string;
+  quarantined_file?: string;
 }
 
-const results: AnalysisResult[] = [];
+type Pixel = { r: number; g: number; b: number };
+
+function readResults(): AnalysisResult[] {
+  try {
+    if (!fs.existsSync(env.resultsFile)) return [];
+    const data = JSON.parse(fs.readFileSync(env.resultsFile, "utf8"));
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    console.error("[AUDIT] Unable to read persisted analysis results", error);
+    throw new Error("results_unavailable");
+  }
+}
+
+function persistResults(results: AnalysisResult[]): void {
+  fs.mkdirSync(path.dirname(env.resultsFile), { recursive: true });
+  const temporary = `${env.resultsFile}.tmp`;
+  fs.writeFileSync(temporary, JSON.stringify(results, null, 2), { mode: 0o600 });
+  fs.renameSync(temporary, env.resultsFile);
+}
+
+function decodeBmp(buffer: Buffer): Pixel[] {
+  if (buffer.length < 54 || buffer.readUInt16LE(0) !== 0x4d42) throw new Error("invalid_file");
+  const pixelOffset = buffer.readUInt32LE(10);
+  const width = buffer.readInt32LE(18);
+  const rawHeight = buffer.readInt32LE(22);
+  const bitsPerPixel = buffer.readUInt16LE(28);
+  const compression = buffer.readUInt32LE(30);
+  if (width <= 0 || rawHeight === 0 || (bitsPerPixel !== 24 && bitsPerPixel !== 32) || compression !== 0) {
+    throw new Error("invalid_file");
+  }
+  const height = Math.abs(rawHeight);
+  const bytesPerPixel = bitsPerPixel / 8;
+  const rowSize = Math.ceil((width * bytesPerPixel) / 4) * 4;
+  if (pixelOffset + rowSize * height > buffer.length) throw new Error("invalid_file");
+  const pixels: Pixel[] = [];
+  for (let row = 0; row < height; row += 1) {
+    const sourceRow = rawHeight > 0 ? height - 1 - row : row;
+    const rowStart = pixelOffset + sourceRow * rowSize;
+    for (let column = 0; column < width; column += 1) {
+      const offset = rowStart + column * bytesPerPixel;
+      pixels.push({ b: buffer[offset], g: buffer[offset + 1], r: buffer[offset + 2] });
+    }
+  }
+  return pixels;
+}
+
+function decodePixels(file: Express.Multer.File): Pixel[] {
+  const ext = path.extname(file.originalname).toLowerCase();
+  if (ext === ".png") {
+    try {
+      const image = PNG.sync.read(file.buffer);
+      const pixels: Pixel[] = [];
+      for (let i = 0; i < image.data.length; i += 4) {
+        pixels.push({ r: image.data[i], g: image.data[i + 1], b: image.data[i + 2] });
+      }
+      return pixels;
+    } catch (error) {
+      console.error("[AUDIT] PNG decoding failed", error);
+      throw new Error("invalid_file");
+    }
+  }
+  return decodeBmp(file.buffer);
+}
 
 export class StegoService {
-  validateFile(file: Express.Multer.File) {
+  validateFile(file: Express.Multer.File): void {
     if (!file) throw new Error("no_file");
     const ext = path.extname(file.originalname).toLowerCase();
-    if (!env.allowedExt.includes(ext)) throw new Error("unsupported_format");
-    if (!env.allowedMimes.includes(file.mimetype)) throw new Error("unsupported_format");
+    if (!env.allowedExt.includes(ext) || !env.allowedMimes.includes(file.mimetype)) {
+      throw new Error("unsupported_format");
+    }
     if (file.size > env.maxFileSize) throw new Error("file_too_large");
-    // Basic magic number check for PNG and BMP
-    const buf = file.buffer;
-    if (ext === ".png") {
-      // PNG signature
-      if (!(buf[0] === 0x89 && buf[1] === 0x50 && buf[2] === 0x4E && buf[3] === 0x47)) throw new Error("invalid_file");
-    }
-    if (ext === ".bmp") {
-      if (!(buf[0] === 0x42 && buf[1] === 0x4D)) throw new Error("invalid_file");
-    }
+    const signature = ext === ".png"
+      ? file.buffer.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))
+      : file.buffer.subarray(0, 2).equals(Buffer.from([0x42, 0x4d]));
+    if (!signature) throw new Error("invalid_file");
+    decodePixels(file);
   }
 
   analyzeLSB(file: Express.Multer.File, userId: string): AnalysisResult {
     this.validateFile(file);
+    const pixels = decodePixels(file);
     const sha256 = crypto.createHash("sha256").update(file.buffer).digest("hex");
-    // Simple LSB statistical analysis (chi-square-like heuristic)
-    const pixels = [];
-    // For simplicity, scan bytes after headers
-    for (let i = 54; i < Math.min(file.buffer.length, 10000); i++) {
-      pixels.push(file.buffer[i] & 1);
-    }
-    if (pixels.length === 0) {
-      return {
-        analysis_id: uuidv4(),
-        user_id: userId,
-        filename: file.originalname,
-        sha256,
-        technique: "lsb_statistical_analysis",
-        status: "no_concluyentes",
-        indicators: { reason: "insufficient_data" },
-        action: "cuarentena",
-        limitations: "Resultado indicativo, no concluyente",
-        created_at: new Date().toISOString()
-      };
-    }
-    const ones = pixels.filter((b) => b === 1).length;
-    const ratio = ones / pixels.length;
-    // Expect ~0.5 for natural images; deviation suggests possible embedding
+    const bits = pixels.flatMap((pixel) => [pixel.r & 1, pixel.g & 1, pixel.b & 1]);
+    if (bits.length === 0) throw new Error("invalid_file");
+
+    const ones = bits.reduce((total, bit) => total + bit, 0);
+    const ratio = ones / bits.length;
     const deviation = Math.abs(ratio - 0.5);
-    const anomaly_score = Math.min(1, deviation * 10);
-    if (anomaly_score >= 0.75) {
-      const result: AnalysisResult = {
-        analysis_id: uuidv4(),
-        user_id: userId,
-        filename: file.originalname,
-        sha256,
-        technique: "lsb_statistical_analysis",
-        status: "sospechoso",
-        indicators: { anomaly_score: Number(anomaly_score.toFixed(3)), ratio: Number(ratio.toFixed(3)), threshold: 0.75 },
-        action: "cuarentena",
-        limitations: "Resultado indicativo, no concluyente",
-        created_at: new Date().toISOString()
-      };
-      results.push(result);
-      return result;
-    } else if (anomaly_score >= 0.4) {
-      const result: AnalysisResult = {
-        analysis_id: uuidv4(),
-        user_id: userId,
-        filename: file.originalname,
-        sha256,
-        technique: "lsb_statistical_analysis",
-        status: "sin_indicios",
-        indicators: { anomaly_score: Number(anomaly_score.toFixed(3)), ratio: Number(ratio.toFixed(3)), threshold: 0.75 },
-        action: "advertencia",
-        limitations: "Resultado indicativo, no concluyente",
-        created_at: new Date().toISOString()
-      };
-      results.push(result);
-      return result;
-    } else {
-      const result: AnalysisResult = {
-        analysis_id: uuidv4(),
-        user_id: userId,
-        filename: file.originalname,
-        sha256,
-        technique: "lsb_statistical_analysis",
-        status: "sin_indicios",
-        indicators: { anomaly_score: Number(anomaly_score.toFixed(3)), ratio: Number(ratio.toFixed(3)), threshold: 0.75 },
-        action: "ninguna",
-        limitations: "Resultado indicativo, no concluyente",
-        created_at: new Date().toISOString()
-      };
-      results.push(result);
-      return result;
+    const anomalyScore = Math.min(1, deviation * 10);
+    const status = anomalyScore >= 0.75 ? "sospechoso" : "sin_indicios";
+    const action = anomalyScore >= 0.75 ? "cuarentena" : anomalyScore >= 0.4 ? "advertencia" : "ninguna";
+    const result: AnalysisResult = {
+      analysis_id: uuidv4(),
+      user_id: userId,
+      filename: path.basename(file.originalname),
+      sha256,
+      technique: "lsb_statistical_analysis",
+      status,
+      indicators: {
+        anomaly_score: Number(anomalyScore.toFixed(3)),
+        ratio: Number(ratio.toFixed(3)),
+        threshold: 0.75
+      },
+      action,
+      limitations: "Resultado indicativo, no concluyente; la heurística no prueba por sí sola la existencia de esteganografía.",
+      created_at: new Date().toISOString()
+    };
+
+    if (action === "cuarentena") {
+      fs.mkdirSync(env.uploadDir, { recursive: true });
+      const quarantinedPath = path.join(env.uploadDir, `${result.analysis_id}${path.extname(file.originalname).toLowerCase()}`);
+      fs.writeFileSync(quarantinedPath, file.buffer, { mode: 0o600 });
+      result.quarantined_file = path.basename(quarantinedPath);
     }
+    const results = readResults();
+    results.push(result);
+    persistResults(results);
+    return result;
   }
 
-  getResult(id: string, userId: string) {
-    const result = results.find((r) => r.analysis_id === id);
+  getResult(id: string, userId: string): AnalysisResult {
+    const result = readResults().find((item) => item.analysis_id === id);
     if (!result) throw new Error("not_found");
     if (result.user_id !== userId) throw new Error("forbidden");
     return result;
@@ -122,4 +149,3 @@ export class StegoService {
 }
 
 export const stegoService = new StegoService();
-export { results };

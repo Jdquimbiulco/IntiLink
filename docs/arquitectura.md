@@ -47,7 +47,7 @@ flowchart TD
     %% Flujos de comunicación
     Client -->|"1. POST /api/auth/login"| AuthAPI
     Client -->|"3. POST /api/steganography/analyze (Bearer JWT)"| StegoAPI
-    StegoAPI -->|"4. POST /internal/authorization/check (x-service-token)"| AuthAPI
+    StegoAPI -->|"4. HTTPS :4001 /internal/authorization/check (TLS + x-service-token)"| AuthAPI
 ```
 
 ---
@@ -59,7 +59,7 @@ flowchart TD
    * La clave privada RSA (`private.pem`) reside **única y exclusivamente** en el contenedor de AUTH.
    * STEGO solo posee la clave pública (`public.pem`), lo que le permite verificar la autenticidad del emisor pero le imposibilita forjar tokens.
 3. **Canal Inter-Servicios Protegido:**
-   * La comunicación entre STEGO y AUTH en `/internal/authorization/check` requiere un secreto compartido de infraestructura (`x-service-token`).
+   * La comunicación entre STEGO y AUTH en `/internal/authorization/check` usa HTTPS interno (puerto 4001), valida el certificado de AUTH y además requiere un secreto compartido de infraestructura (`x-service-token`).
 4. **Denegación por Defecto (Fail-Safe Defaults):**
    * Si la llamada inter-servicios falla (timeout, caída de contenedor o token inválido), STEGO responde `403 Forbidden` (`auth_unavailable`) y descarta el procesamiento del archivo.
 
