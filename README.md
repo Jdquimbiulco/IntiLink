@@ -221,6 +221,7 @@ El sistema cuenta con una guía completa paso a paso para reproducir los 12 esce
 
 ## 📚 Documentación Técnica Complementaria
 
+* [Guía Práctica de Pruebas (T01 a T12)](docs/guia_pruebas_T01_T12.md)
 * [Arquitectura de Microservicios y Límites de Confianza](docs/arquitectura.md)
 * [Diagrama Entidad-Relación y Esquema Relacional](docs/ERD.md)
 * [Matriz de Activos, Amenazas, Riesgos y Controles (ISO/IEC 27001 / 27034)](docs/matriz_riesgos.md)

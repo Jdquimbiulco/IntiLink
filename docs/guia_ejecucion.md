@@ -2,10 +2,12 @@
 
 ## Levantar servicios
 ```bash
-docker compose up --build
+docker compose up --build -d
 ```
+> **Nota:** Las migraciones de base de datos (`users`, `roles`, `user_roles`) y la creación del usuario inicial `admin` se ejecutan **de manera 100% automática** al iniciar el contenedor `auth-service`.
 
-## Aplicar migraciones
+## Aplicar migraciones manualmente (Opcional)
+Si deseas forzar o reejecutar las migraciones manualmente:
 ```bash
 docker compose exec auth-service npm run migrate
 ```
