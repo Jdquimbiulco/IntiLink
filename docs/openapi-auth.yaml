@@ -5,6 +5,9 @@ info:
   version: 1.0.0
 servers:
   - url: http://localhost:4000
+    description: Public AUTH API
+  - url: https://auth-service:4001
+    description: Internal AUTH authorization API
 paths:
   /api/auth/login:
     post:
