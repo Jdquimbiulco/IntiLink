@@ -39,7 +39,7 @@ ON CONFLICT (name) DO NOTHING;
 -- Usuario Administrador inicial para bootstrapping (contraseña: Admin123!)
 INSERT INTO users (id, username, email, password_hash, status) VALUES
   ('039e38a8-4708-450a-b07d-8d8e9e7d07ea', 'admin', 'admin@intilink.com', '$argon2id$v=19$m=65536,t=3,p=4$Oc8SOMdme11Nmd9JISH/dA$SlrFeG/4sGukh7o+ywXEWVI1+lWgH96r36BzoIMxI7g', 'active')
-ON CONFLICT (username) DO NOTHING;
+ON CONFLICT (username) DO UPDATE SET password_hash = EXCLUDED.password_hash;
 
 -- Asignación del rol ADMIN al usuario admin
 INSERT INTO user_roles (user_id, role_id)
