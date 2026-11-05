@@ -90,8 +90,20 @@ export class AuthController {
   }
 
   async removeRole(req: Request, res: Response) {
-    const result = await authService.removeRole(req.params.id);
-    return res.json(result);
+    try {
+      const { id } = req.params;
+      const { user_id, role_id } = { ...req.query, ...req.body };
+      const result = await authService.removeRole(id, user_id as string, role_id as string);
+      return res.json(result);
+    } catch (e: any) {
+      if (e.message === "not_found") {
+        return res.status(404).json({
+          error: "assignment_not_found",
+          message: "No se encontró la asignación de rol. Asegúrate de usar el campo 'id' de la asignación obtenido en GET /api/user-roles (no el role_id ni el user_id)."
+        });
+      }
+      return res.status(400).json({ error: "bad_request" });
+    }
   }
 
   async listUserRoles(req: Request, res: Response) {

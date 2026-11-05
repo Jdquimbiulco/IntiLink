@@ -107,10 +107,51 @@ export class AuthService {
     return result.rows;
   }
 
-  async removeRole(id: string) {
-    await pool.query("DELETE FROM user_roles WHERE id = $1", [id]);
-    console.log(`[AUDIT] [ROLE_REMOVED] Assignment id: ${id} revoked successfully`);
-    return { removed: true };
+  async removeRole(id?: string, userId?: string, roleId?: string) {
+    // 1. Si especifican user_id y role_id explícitamente (vía body o query)
+    if (userId && roleId) {
+      const res = await pool.query(
+        "DELETE FROM user_roles WHERE user_id = $1 AND role_id = $2 RETURNING id, user_id, role_id",
+        [userId, roleId]
+      );
+      if (res.rowCount && res.rowCount > 0) {
+        console.log(`[AUDIT] [ROLE_REMOVED] Revoked role ${roleId} from user ${userId}`);
+        return { removed: true, deleted_count: res.rowCount };
+      }
+      throw new Error("not_found");
+    }
+
+    // 2. Si pasaron un ID en la URL
+    if (id) {
+      // 2a. Intentar borrar por ID primario de la asignación (user_roles.id)
+      let res = await pool.query("DELETE FROM user_roles WHERE id = $1 RETURNING id, user_id, role_id", [id]);
+      if (res.rowCount && res.rowCount > 0) {
+        console.log(`[AUDIT] [ROLE_REMOVED] Assignment id: ${id} revoked successfully`);
+        return { removed: true, deleted_count: res.rowCount };
+      }
+
+      // 2b. Si se envió user_id complementario y el 'id' era el role_id
+      if (userId) {
+        res = await pool.query("DELETE FROM user_roles WHERE user_id = $1 AND role_id = $2 RETURNING id", [userId, id]);
+        if (res.rowCount && res.rowCount > 0) {
+          console.log(`[AUDIT] [ROLE_REMOVED] Role ${id} revoked for user ${userId}`);
+          return { removed: true, deleted_count: res.rowCount };
+        }
+      }
+
+      // 2c. Si el 'id' enviado corresponde al role_id y tiene una única asignación activa
+      const byRole = await pool.query("SELECT id, user_id FROM user_roles WHERE role_id = $1", [id]);
+      if (byRole.rowCount === 1) {
+        const assignmentId = byRole.rows[0].id;
+        await pool.query("DELETE FROM user_roles WHERE id = $1", [assignmentId]);
+        console.log(`[AUDIT] [ROLE_REMOVED] Resolved role_id: ${id} to assignment: ${assignmentId} and revoked`);
+        return { removed: true, deleted_count: 1 };
+      }
+
+      throw new Error("not_found");
+    }
+
+    throw new Error("not_found");
   }
 
   async checkAuthorization(subject_token: string, action: string) {
