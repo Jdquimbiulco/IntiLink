@@ -10,7 +10,7 @@
     "lint": "echo 'skip'"
   },
   "dependencies": {
-    "argon2": "^0.31.2",
+    "argon2": "^0.44.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
@@ -18,8 +18,7 @@
     "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.12.0",
-    "uuid": "^9.0.1",
-    "zod": "^3.23.8"
+    "uuid": "^11.1.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

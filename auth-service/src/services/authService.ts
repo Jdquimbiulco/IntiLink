@@ -23,6 +23,7 @@ export class AuthService {
     const result = await pool.query("SELECT id, username, email, status, created_at FROM users WHERE id = $1", [userId]);
     const user = result.rows[0];
     if (!user) throw new Error("not_found");
+    if (user.status !== "active") throw new Error("inactive_user");
     const rolesRes = await pool.query(
       `SELECT r.name FROM user_roles ur JOIN roles r ON r.id = ur.role_id WHERE ur.user_id = $1 AND r.status = 'active'`,
       [userId]

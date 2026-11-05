@@ -1,6 +1,7 @@
 import express from "express";
 import helmet from "helmet";
 import cors from "cors";
+import multer from "multer";
 import routes from "./routes";
 import { env } from "./config/env";
 import fs from "fs";
@@ -32,6 +33,14 @@ app.use((req, res, next) => {
 app.get("/health", (req, res) => res.json({ status: "ok", service: "stego" }));
 
 app.use(routes);
+
+app.use((error: unknown, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  if (error instanceof multer.MulterError && error.code === "LIMIT_FILE_SIZE") {
+    return res.status(413).json({ error: "file_too_large" });
+  }
+  if (error) return res.status(400).json({ error: "invalid_multipart_request" });
+  return next();
+});
 
 app.listen(env.port, () => {
   console.log(`Stego service running on port ${env.port}`);

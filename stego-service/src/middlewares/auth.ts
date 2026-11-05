@@ -3,6 +3,7 @@ import { verifyToken } from "../utils/jwt";
 
 export interface AuthRequest extends Request {
   user?: any;
+  token?: string;
 }
 
 export function authenticate(req: AuthRequest, res: Response, next: NextFunction) {
@@ -14,7 +15,7 @@ export function authenticate(req: AuthRequest, res: Response, next: NextFunction
     const token = auth.substring("Bearer ".length);
     const decoded = verifyToken(token);
     req.user = decoded;
-    (req as any).token = token;
+    req.token = token;
     next();
   } catch (e) {
     return res.status(401).json({ error: "unauthorized" });
