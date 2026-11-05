@@ -11,7 +11,7 @@
 **IntiLink Backend V1** constituye la base de seguridad para una plataforma de mensajería y salas de chat seguras. El sistema implementa una arquitectura desacoplada en **dos microservicios REST autónomos** bajo los enfoques de **Zero Trust**, **Secure by Design** y **Shift Left Security**, tomando como referencia los estándares **ISO/IEC 27001**, **ISO/IEC 27034** y **OWASP ASVS v5.0**:
 
 1. **Microservicio AUTH (Puerto 4000):** Autoridad central de identidades y control de acceso. Administra usuarios, roles y su relación muchos a muchos (N:M) en PostgreSQL, almacena contraseñas mediante **Argon2id**, emite **JWT asimétricos (RS256)** con expiración acotada a 15 minutos y resuelve la autorización RBAC consultando la base de datos en tiempo real.
-2. **Microservicio STEGO (Puerto 5000):** Analizador esteganográfico de imágenes (PNG y BMP). Valida firmas binarias reales (Magic Bytes), tipos MIME y tamaños en memoria. Aplica análisis estadístico de bit menos significativo (**LSB**) únicamente después de verificar la validez criptográfica del JWT y consultar a AUTH la autorización vigente del usuario.
+2. **Microservicio STEGO (Puerto 5000):** Analizador esteganográfico de imágenes (PNG y BMP). Valida firmas binarias reales (Magic Bytes), decodifica la imagen y verifica sus píxeles antes de aplicar análisis estadístico del bit menos significativo (**LSB**). Los resultados son persistentes y los archivos sospechosos se aíslan en almacenamiento privado.
 
 ```
                  Cliente REST / Thunder Client
@@ -30,7 +30,7 @@
 
 ## 🔒 Principios de Seguridad Implementados
 
-* **Zero Trust (Confianza Cero):** Un JWT válido no es sinónimo de permiso eterno. STEGO verifica localmente la firma del token con la clave pública de AUTH, pero **siempre** consulta la autorización activa antes de procesar una imagen. La revocación de un rol surte efecto inmediato en la siguiente petición.
+* **Zero Trust (Confianza Cero):** Un JWT válido no es sinónimo de permiso eterno. STEGO verifica localmente la firma del token con la clave pública de AUTH, pero **siempre** consulta la autorización activa mediante HTTPS interno antes de procesar una imagen. La revocación de un rol surte efecto inmediato en la siguiente petición.
 * **Separación de Responsabilidades y Mínimo Privilegio:** STEGO no se conecta a la base de datos de usuarios ni tiene acceso a la clave privada RSA.
 * **Fallo Seguro (Fail-Safe Defaults):** Si AUTH se encuentra inaccesible, STEGO deniega inmediatamente la petición (`403 Forbidden - auth_unavailable`) sin procesar el archivo.
 * **Higiene en Bitácoras (DLP):** Los registros de auditoría (`[AUDIT]`) enmascaran los tokens JWT (`Bearer eyJhbG...VzH6DBrQ`) y omiten contraseñas o claves privadas.
@@ -69,6 +69,7 @@ Esto levantará tres contenedores:
 * `intilink-auth-db-1`: PostgreSQL 15 en el puerto host `5433` (interno `5432`).
 * `intilink-auth-service-1`: Servicio AUTH en el puerto `4000`.
 * `intilink-stego-service-1`: Servicio STEGO en el puerto `5000`.
+* `intilink-jwt_keys`: Volumen privado generado al arrancar AUTH para compartir sólo la clave pública con STEGO.
 
 ### 4. Inicializar tablas y roles (Migraciones)
 Las tablas y roles base (`ADMIN`, `ANALYST`, `USER`) se configuran automáticamente al iniciar el servicio. También pueden aplicarse directamente ejecutando:
@@ -117,6 +118,8 @@ python3 generar_imagenes.py
 Generará:
 * `imagen_limpia.png` y `muestra_limpia.bmp` (ratio LSB ~0.49 ➔ `sin_indicios`).
 * `imagen_con_lsb.png` y `muestra_con_lsb.bmp` (ratio LSB ~0.99 ➔ `sospechoso` / `cuarentena`).
+
+Los metadatos de cada análisis se conservan en el volumen `stego_data`; los archivos sospechosos se guardan con un nombre UUID y no se exponen como archivos públicos.
 
 ---
 

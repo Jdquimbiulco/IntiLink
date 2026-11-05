@@ -1,0 +1,6 @@
+**/node_modules/
+**/dist/
+**/.env
+**/data/
+**/uploads/
+auth-service/keys/private.pem

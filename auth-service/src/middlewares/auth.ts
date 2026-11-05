@@ -29,7 +29,8 @@ export function requireRole(roles: string[]) {
       const result = await pool.query(
         `SELECT r.name FROM user_roles ur
          JOIN roles r ON r.id = ur.role_id
-         WHERE ur.user_id = $1 AND r.status = 'active'`,
+         JOIN users u ON u.id = ur.user_id
+         WHERE ur.user_id = $1 AND r.status = 'active' AND u.status = 'active'`,
         [userId]
       );
       const userRoles = result.rows.map((r: any) => r.name);
