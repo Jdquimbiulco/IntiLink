@@ -1,0 +1,26 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const authController_1 = require("../controllers/authController");
+const auth_1 = require("../middlewares/auth");
+const serviceAuth_1 = require("../middlewares/serviceAuth");
+const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
+const router = (0, express_1.Router)();
+const loginLimiter = (0, express_rate_limit_1.default)({ windowMs: 60 * 1000, max: 10 });
+router.post("/api/auth/login", loginLimiter, authController_1.authController.login);
+router.get("/api/auth/profile", auth_1.authenticate, authController_1.authController.profile);
+router.post("/api/auth/logout", auth_1.authenticate, authController_1.authController.logout);
+router.post("/api/users", auth_1.authenticate, (0, auth_1.requireRole)(["ADMIN"]), authController_1.authController.createUser);
+router.get("/api/users", auth_1.authenticate, (0, auth_1.requireRole)(["ADMIN"]), authController_1.authController.listUsers);
+router.patch("/api/users/:id", auth_1.authenticate, (0, auth_1.requireRole)(["ADMIN"]), authController_1.authController.updateUser);
+router.post("/api/roles", auth_1.authenticate, (0, auth_1.requireRole)(["ADMIN"]), authController_1.authController.createRole);
+router.get("/api/roles", auth_1.authenticate, (0, auth_1.requireRole)(["ADMIN"]), authController_1.authController.listRoles);
+router.patch("/api/roles/:id", auth_1.authenticate, (0, auth_1.requireRole)(["ADMIN"]), authController_1.authController.updateRole);
+router.post("/api/user-roles", auth_1.authenticate, (0, auth_1.requireRole)(["ADMIN"]), authController_1.authController.assignRole);
+router.get("/api/user-roles", auth_1.authenticate, (0, auth_1.requireRole)(["ADMIN"]), authController_1.authController.listUserRoles);
+router.delete("/api/user-roles/:id", auth_1.authenticate, (0, auth_1.requireRole)(["ADMIN"]), authController_1.authController.removeRole);
+router.post("/internal/authorization/check", serviceAuth_1.serviceAuth, authController_1.authController.internalCheck);
+exports.default = router;
